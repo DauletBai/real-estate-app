@@ -5,6 +5,7 @@ import (
     "net/http"
     "github.com/DauletBai/real-estate-app/config"
     "github.com/DauletBai/real-estate-app/internal/handlers"
+    "github.com/DauletBai/internal/middlewares"
     "github.com/DauletBai/real-estate-app/pkg/db"
     "github.com/go-chi/chi/v5"
 )
@@ -25,6 +26,12 @@ func main() {
 
     // Инициализация маршрутов
     r := chi.NewRouter()
+
+    // Логирование всех запросов
+    r.Use(middlewares.Logger)
+
+    // Пример защищённого маршрута
+    r.With(middlewares.AuthMiddleware).Get("/secure", handlers.SecureEndpoint)
 
     // Пример маршрута для получения списка недвижимости
     r.Get("/properties", handlers.GetProperties(dbConn))
